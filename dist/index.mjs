@@ -28757,17 +28757,19 @@ function buildArraySection(name, rawResults, annotationsEnabled) {
     tableBody.push([
       fileName,
       results.map((result) => {
+        core7.debug(`[buildArraySection]: ${fileName} result ${result}`);
         if (Array.isArray(result)) {
           if (annotationsEnabled) {
-            result.map(
-              (member) => isValidAnnotationBody(member) && annotations.push({
+            result.map((member) => {
+              core7.debug(`[buildArraySection] member: ${member}`);
+              isValidAnnotationBody(member) && annotations.push({
                 path: fileName,
                 identifier: member.name,
                 start_line: member.line,
                 start_column: member.col,
                 type: "export"
-              })
-            );
+              });
+            });
           }
           return result.map((item2) => `\`${item2.name}\``).join(", ");
         }
@@ -28862,7 +28864,7 @@ function buildMarkdownSections(report, annotationsEnabled, verboseEnabled) {
       case "files":
         if (report.files.length > 0) {
           outputSections.push(buildFilesSection(report.files));
-          core7.debug(`[buildMarkdownSections]: Parsed ${key} (${report.files.length})`);
+          core7.debug(`[buildMarkdownSections]: Parsed files ${key} (${report.files.length})`);
         }
         break;
       case "dependencies":
@@ -28880,7 +28882,8 @@ function buildMarkdownSections(report, annotationsEnabled, verboseEnabled) {
             outputSections.push(s);
           }
           outputAnnotations.push(...annotations);
-          core7.debug(`[buildMarkdownSections]: Parsed ${key} (${Object.keys(report[key]).length})`);
+          core7.debug(`[buildMarkdownSections]: Parsed arrays ${key} (${Object.keys(report[key]).length})`);
+          core7.debug(`[buildMarkdownSections]: Total annotations ${outputAnnotations.length}`);
         }
         break;
       case "enumMembers":
@@ -28896,7 +28899,7 @@ function buildMarkdownSections(report, annotationsEnabled, verboseEnabled) {
           for (const section of sections) {
             outputSections.push(section);
           }
-          core7.debug(`[buildMarkdownSections]: Parsed ${key} (${Object.keys(report[key]).length})`);
+          core7.debug(`[buildMarkdownSections]: Parsed maps ${key} (${Object.keys(report[key]).length})`);
         }
         break;
     }
