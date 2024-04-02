@@ -33,6 +33,16 @@ export interface ActionConfig {
    * Do not fail the action run if knip results are found.
    */
   ignoreResults: boolean;
+
+  /**
+   * Use JSON results input.
+   */
+  jsonInput: boolean;
+
+  /**
+   * Optional JSON results input file name.
+   */
+  jsonInputFileName: string;
 }
 
 export function getConfig(): ActionConfig {
@@ -43,6 +53,8 @@ export function getConfig(): ActionConfig {
     annotations: core.getBooleanInput("annotations", { required: false }),
     verbose: core.getBooleanInput("verbose", { required: false }),
     ignoreResults: core.getBooleanInput("ignore_results", { required: false }),
+    jsonInput: core.getBooleanInput("json_input", { required: false }),
+    jsonInputFileName: core.getInput("json_input_file_name", { required: false }) || "knip.json",
   };
 }
 

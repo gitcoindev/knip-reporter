@@ -7,6 +7,7 @@ import { markdownTable, type Options as MarkdownTableOptions } from "markdown-ta
 import { GITHUB_COMMENT_MAX_COMMENT_LENGTH } from "../api.ts";
 import { timeTask } from "./task.ts";
 import type { ItemMeta } from "./types.ts";
+import { readFileSync } from "node:fs";
 
 export async function buildRunKnipCommand(buildScriptName: string): Promise<string> {
   const cmd = await getCliCommand(parseNr, [buildScriptName, "--reporter json"], {
@@ -526,12 +527,18 @@ export async function runKnipTasks(
   buildScriptName: string,
   annotationsEnabled: boolean,
   verboseEnabled: boolean,
+  jsonInputEnabled: boolean,
+  jsonInputFileName: string,
 ): Promise<{ sections: string[]; annotations: ItemMeta[] }> {
   const taskMs = Date.now();
   core.info("- Running Knip tasks");
-
+  let output: string;
   const cmd = await timeTask("Build knip command", () => buildRunKnipCommand(buildScriptName));
-  const output = await timeTask("Run knip", async () => getJsonFromOutput(await run(cmd)));
+  if (jsonInputEnabled) {
+    output = getJsonFromOutput(readFileSync(jsonInputFileName, {encoding: "utf8"}));
+  } else {
+    output = await timeTask("Run knip", async () => getJsonFromOutput(await run(cmd)));
+  };
   const report = await timeTask("Parse knip report", async () => parseJsonReport(output));
   const sectionsAndAnnotations = await timeTask("Convert report to markdown", async () =>
     buildMarkdownSections(report, annotationsEnabled, verboseEnabled),
