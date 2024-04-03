@@ -54,7 +54,7 @@ export function getConfig(): ActionConfig {
     verbose: core.getBooleanInput("verbose", { required: false }),
     ignoreResults: core.getBooleanInput("ignore_results", { required: false }),
     jsonInput: core.getBooleanInput("json_input", { required: false }),
-    jsonInputFileName: core.getInput("json_input_file_name", { required: false }) || "knip.json",
+    jsonInputFileName: core.getInput("json_input_file_name", { required: false }) || "knip-results.json",
   };
 }
 
