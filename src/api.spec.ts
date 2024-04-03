@@ -33,7 +33,8 @@ describe("API", () => {
     verbose: false,
     ignoreResults: false,
     jsonInput: false,
-    jsonInputFileName: "knip-results.json"
+    jsonInputFileName: "knip-results.json",
+    pullRequestNumber: 0,
   };
   type Octokit = ReturnType<(typeof github)["getOctokit"]>;
   let octokit: Octokit;

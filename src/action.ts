@@ -43,6 +43,11 @@ export interface ActionConfig {
    * Optional JSON results input file name.
    */
   jsonInputFileName: string;
+
+  /**
+   * Optional pull request number when JSON results input is used.
+   */
+  pullRequestNumber: number;
 }
 
 export function getConfig(): ActionConfig {
@@ -55,6 +60,7 @@ export function getConfig(): ActionConfig {
     ignoreResults: core.getBooleanInput("ignore_results", { required: false }),
     jsonInput: core.getBooleanInput("json_input", { required: false }),
     jsonInputFileName: core.getInput("json_input_file_name", { required: false }) || "knip-results.json",
+    pullRequestNumber: Number(core.getInput("pull_request_number", { required: false })),
   };
 }
 

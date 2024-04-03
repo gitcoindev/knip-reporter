@@ -22881,7 +22881,8 @@ function getConfig() {
     verbose: core.getBooleanInput("verbose", { required: false }),
     ignoreResults: core.getBooleanInput("ignore_results", { required: false }),
     jsonInput: core.getBooleanInput("json_input", { required: false }),
-    jsonInputFileName: core.getInput("json_input_file_name", { required: false }) || "knip-results.json"
+    jsonInputFileName: core.getInput("json_input_file_name", { required: false }) || "knip-results.json",
+    pullRequestNumber: Number(core.getInput("pull_request_number", { required: false }))
   };
 }
 function configToStr(cfg) {
@@ -29058,7 +29059,7 @@ async function run3() {
     const actionMs = Date.now();
     core8.info("- knip-reporter action");
     core8.info(configToStr(config3));
-    if (github2.context.payload.pull_request === void 0 || github2.context.eventName !== "workflow_run") {
+    if (github2.context.payload.pull_request === void 0 && github2.context.eventName !== "workflow_run") {
       throw new Error(
         `knip-reporter currently only supports 'pull_request' and 'workflow_run' events, current event: ${github2.context.eventName}`
       );
@@ -29080,7 +29081,7 @@ async function run3() {
     );
     await runCommentTask(
       config3.commentId,
-      github2.context.payload.pull_request.number,
+      github2.context.payload.pull_request?.number || config3.pullRequestNumber,
       knipSections
     );
     let counts = new AnnotationsCount();
